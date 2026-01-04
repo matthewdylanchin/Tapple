@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Tapple (Simple)</title>
     <style>
       :root {
@@ -66,7 +67,7 @@
 
       .board {
         width: 100vw;
-        height: calc(100vh - 110px);
+        height: calc(100vh - 120px);
         display: grid;
         place-items: center;
         position: relative;
@@ -239,7 +240,7 @@
       // Build ring
       function buildRing() {
         ring.innerHTML = "";
-        const radius =
+        const radius = 210
           parseFloat(
             getComputedStyle(document.documentElement).getPropertyValue("--r")
           ) || 160;

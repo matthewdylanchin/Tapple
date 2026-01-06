@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Volume2, VolumeX } from "lucide-react";
 
 type Props = {

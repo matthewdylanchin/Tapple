@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import SoundToggle from "./components/SoundToggle"; 
 import LetterWheel from "./components/LetterWheel";
@@ -22,6 +22,28 @@ export default function TappleGame() {
   const [soundOn, setSoundOn] = useState(true);
 
   useTicking(soundOn, phase, timeLeft, category);
+
+
+  useEffect(() => {
+  if (phase !== "playing") return;
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.repeat) return; // prevents holding key spamming
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    const key = e.key.toUpperCase();
+
+    // Only A-Z
+    if (key.length === 1 && key >= "A" && key <= "Z") {
+      e.preventDefault();
+      useLetter(key);
+    }
+  };
+
+  window.addEventListener("keydown", onKeyDown);
+  return () => window.removeEventListener("keydown", onKeyDown);
+}, [phase, tappedLetters]); 
+
 
 useEffect(() => {
     startNewRound();
@@ -69,6 +91,19 @@ useEffect(() => {
     window.setTimeout(() => setPhase("gameover"), 900);
   }
 
+  function useLetter(letter: string) {
+  if (phase !== "playing") return;
+
+  const L = letter.toUpperCase();
+  if (L.length !== 1) return;
+  if (L < "A" || L > "Z") return;
+
+  if (tappedLetters.has(L)) return;
+
+  setTappedLetters(prev => new Set([...prev, L]));
+}
+
+
 
 
   return (
@@ -97,9 +132,7 @@ useEffect(() => {
           letters={LETTERS}
           tapped={tappedLetters}
           disabled={phase !== "playing"}
-          onLetterClick={(ch) => {
-            setTappedLetters((prev) => new Set([...prev, ch]));
-          }}
+          onLetterClick= {useLetter}
         />
 
         <div className="text-center mt-8">
